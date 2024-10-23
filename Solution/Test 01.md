@@ -6,7 +6,7 @@ Here’s a breakdown of the solution, including a Python script to monitor the s
 
 The first Python script will check the status of the httpd, rabbitmq-server, and postgresql services on a Linux machine, and generate a JSON object based on their statuses. Each service's status will be written to a separate JSON file.
 
-#### monitor_services.py:
+#### `monitor_services.py:`
 ```python
 import os
 import json
@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
 The second script creates a simple REST API to interact with Elasticsearch using the Flask web framework. It allows data to be posted to Elasticsearch and retrieved via specific endpoints.
 
-#### app.py:
+#### `app.py:`
 ```python
 from flask import Flask, request, jsonify
 from elasticsearch import Elasticsearch
@@ -103,3 +103,68 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 ```
+
+# Service Monitoring and Healthcheck API
+
+## Overview
+
+This project includes:
+1. **`monitor_services.py`**: A script to monitor Linux services (`httpd`, `rabbitmq-server`, and `postgresql`) and create JSON files based on their status.
+2. **`app.py`**: A REST API that accepts these JSON files and stores them in Elasticsearch. It also provides endpoints to check the application and service health.
+
+## Prerequisites
+
+1. Python 3.7+ installed.
+2. Elasticsearch running locally or configured to match your server settings.
+3. Required Python packages: `flask`, `elasticsearch`.
+   Install with:
+   
+   ```bash
+   pip install flask elasticsearch
+4. Services to monitor (httpd, rabbitmq-server, postgresql) must be set up as Linux services.
+
+# How to Run
+## Step 1: Monitor Services
+
+To monitor services and create JSON files, run:
+```bash
+python monitor_services.py
+```
+JSON files will be created in the same directory with the format `{serviceName}-status-{timestamp}.json`.
+
+## Step 2: Run REST API
+To start the REST API server, execute:
+
+```bash
+python app.py
+
+```
+The server will start on `http://127.0.0.1:5000`.
+
+# API Endpoints
+## 1. Add a JSON file to Elasticsearch
+
+- POST /add
+- Content-Type: multipart/form-data
+- Upload the JSON file with the file parameter.
+  
+```bash
+curl -X POST -F 'file=@httpd-status-202410230930.json' http://127.0.0.1:5000/add
+```
+
+## 2. Check overall application status
+
+-  GET  `/healthcheck`
+```bash
+curl http://127.0.0.1:5000/healthcheck
+```
+## 3. Check specific service status
+
+- GET `/healthcheck/{serviceName}`
+```bash
+curl http://127.0.0.1:5000/healthcheck/httpd
+```
+
+
+
+  
