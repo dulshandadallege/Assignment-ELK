@@ -115,5 +115,25 @@ Below is an Ansible playbook that handles three tasks (`verify_install`, `check-
                   | trim }}
 
 ```
+# Explanation
+### 1. verify_install:
 
+- Checks if the services are installed on their respective servers.
+- Installs missing services using `yum`.
+- Adjust the package name if necessary depending on your RHEL configuration.
+### 2. check-disk:
+
+- Executes a shell command to check if any mounted filesystem has disk usage greater than 80%.
+- Sends an alert email if the threshold is exceeded using the `mail` module.
+### 3.check-status:
+
+- Uses the REST API (created in TEST1) to check the overall application status and individual services.
+- Uses the `uri` module to interact with the API and report any services that are down.
+
+# Command to Run the Playbook
+To run the playbook for each action, use the following command:
+```bash
+ansible-playbook assignment.yml -i inventory -e action=verify_install
+```
+Replace `verify_install` with `check-disk` or `check-status` depending on the task you want to perform.
 
