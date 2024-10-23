@@ -56,3 +56,7 @@ print(f"Filtered data saved to {output_file}")
 1. Make sure you have Python 3 installed on your system.
 2. Save the script as `filter_sales.py` and place `sales-data.csv` in the same directory.
 3. Run the script using:
+
+```bash
+python filter_sales.py
+```
